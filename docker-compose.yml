@@ -1,0 +1,42 @@
+version: '3'
+services:
+
+  nodejs:
+    build: 
+      context: .
+    container_name: app
+    ports:
+      - 3000:3000
+    volumes:
+      - ./src:/app
+    tty: true
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DB=${MYSQL_DB}
+    # command: ["npm", "start"]
+    depends_on:
+      - mysql  
+    networks:
+      - app-network
+    command: ["tail", "-f", "/dev/null"]
+
+  mysql:
+    image: mysql:latest
+    container_name: db
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DB}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
