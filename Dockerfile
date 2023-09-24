@@ -1,10 +1,8 @@
 FROM node:latest
 
-WORKDIR /app
+# COPY src/package*.json ./
 
-COPY src/package*.json ./
-
-RUN npm install
+# RUN npm install
 
 ENV DOCKERIZE_VERSION v0.7.0
 
@@ -13,6 +11,10 @@ RUN apt-get update \
     && wget -O - https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz | tar xzf - -C /usr/local/bin \
     && apt-get autoremove -yqq --purge wget && rm -rf /var/lib/apt/lists/*
 
-EXPOSE 3000
+RUN usermod -u 501 node
+
+USER node 
+
+WORKDIR /app
 
 # CMD ["npm", "start"]
