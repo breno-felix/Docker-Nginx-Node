@@ -42,6 +42,7 @@ services:
       - MYSQL_DATABASE=${MYSQL_DB}
     volumes:
       - mysql-data:/var/lib/mysql
+      - ./create_table_people.sql:/docker-entrypoint-initdb.d/create_table_people.sql
     networks:
       - app-network
 
